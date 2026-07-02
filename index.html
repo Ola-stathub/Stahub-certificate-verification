@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Certificate Verification | StatHub Datametrics Limited</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    /* ── Reset ─────────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #F0F4FF;
+      color: #1A1A2E;
+      min-height: 100vh;
+      padding: 32px 16px 64px;
+    }
+
+    /* ── Page wrapper ───────────────────────────────────────────────── */
+    .page {
+      max-width: 620px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* ── Hero card ──────────────────────────────────────────────────── */
+    .hero {
+      background: linear-gradient(135deg, #0D2B8E 0%, #123DCE 55%, #2AB7B0 100%);
+      border-radius: 24px;
+      padding: 52px 32px 46px;
+      text-align: center;
+      color: #fff;
+      box-shadow: 0 24px 64px rgba(18, 61, 206, 0.30);
+      margin-bottom: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Decorative circles */
+    .hero::before {
+      content: '';
+      position: absolute;
+      width: 280px; height: 280px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.05);
+      top: -80px; right: -80px;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      width: 200px; height: 200px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.04);
+      bottom: -60px; left: -60px;
+    }
+
+    .hero-icon  { font-size: 60px; display: block; margin-bottom: 16px; position: relative; z-index: 1; }
+    .hero-title {
+      font-size: clamp(21px, 5.5vw, 28px);
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 12px;
+      letter-spacing: -0.5px;
+      position: relative; z-index: 1;
+    }
+    .hero-sub {
+      font-size: clamp(13px, 3.5vw, 15px);
+      color: rgba(255,255,255,0.82);
+      line-height: 1.65;
+      margin-bottom: 26px;
+      position: relative; z-index: 1;
+    }
+    .hero-cert {
+      font-size: 13px;
+      color: rgba(255,255,255,0.70);
+      letter-spacing: 0.5px;
+      margin-bottom: 20px;
+      position: relative; z-index: 1;
+    }
+    .hero-cert strong { color: #fff; font-weight: 700; }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.16);
+      border: 1.5px solid rgba(255,255,255,0.34);
+      border-radius: 50px;
+      padding: 10px 26px;
+      font-size: clamp(12px, 3vw, 14px);
+      font-weight: 700;
+      color: #fff;
+      position: relative; z-index: 1;
+    }
+
+    /* ── Info card ──────────────────────────────────────────────────── */
+    .card {
+      background: #fff;
+      border: 1.5px solid #E5E9F0;
+      border-radius: 20px;
+      padding: 32px 28px 28px;
+      box-shadow: 0 4px 28px rgba(0,0,0,0.06);
+      margin-bottom: 20px;
+    }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #0D2B8E;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* ── Info rows ──────────────────────────────────────────────────── */
+    .info-row {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      margin-bottom: 18px;
+    }
+    .info-row:last-of-type { margin-bottom: 0; }
+
+    .info-icon {
+      font-size: 20px;
+      flex-shrink: 0;
+      margin-top: 1px;
+      line-height: 1;
+    }
+
+    .info-text {
+      font-size: clamp(13px, 3.2vw, 14px);
+      color: #374151;
+      line-height: 1.7;
+    }
+    .info-text strong { color: #111827; }
+
+    /* ── Divider ────────────────────────────────────────────────────── */
+    .divider {
+      border: none;
+      border-top: 1.5px solid #F0F2F5;
+      margin: 24px 0;
+    }
+
+    /* ── WhatsApp button ────────────────────────────────────────────── */
+    .wa-wrap {
+      text-align: center;
+      margin-top: 16px;
+    }
+
+    .wa-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: #25D366;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: clamp(13px, 3.5vw, 15px);
+      font-weight: 700;
+      padding: 15px 36px;
+      border-radius: 50px;
+      text-decoration: none;
+      box-shadow: 0 8px 28px rgba(37, 211, 102, 0.38);
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+      width: 100%;
+      max-width: 280px;
+    }
+
+    .wa-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 36px rgba(37, 211, 102, 0.48);
+    }
+
+    .wa-btn:active { transform: translateY(0); }
+
+    /* ── Footer ─────────────────────────────────────────────────────── */
+    .footer {
+      text-align: center;
+      font-size: 12px;
+      color: #9CA3AF;
+      line-height: 1.8;
+      margin-top: 8px;
+      padding: 0 8px;
+    }
+
+    /* ── Responsive tweaks ──────────────────────────────────────────── */
+    @media (max-width: 480px) {
+      body { padding: 20px 12px 48px; }
+      .hero { padding: 40px 20px 36px; border-radius: 18px; }
+      .card { padding: 24px 18px 22px; border-radius: 16px; }
+      .wa-btn { max-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- ── Hero ─────────────────────────────────────────────────────── -->
+  <div class="hero">
+    <span class="hero-icon">🎓</span>
+    <h1 class="hero-title">Certificate of Authenticity</h1>
+    <p class="hero-sub">
+      This document confirms the validity of a certificate<br>
+      issued by <strong>StatHub Datametrics Limited</strong>.
+    </p>
+    <p class="hero-cert" id="cert-line" style="display:none;">
+      Certificate No: <strong id="cert-number"></strong>
+    </p>
+    <div class="pill">✅ &nbsp; Verified &amp; Authentic Certificate</div>
+  </div>
+
+  <!-- ── About card ────────────────────────────────────────────────── -->
+  <div class="card">
+
+    <p class="card-title">📋 &nbsp;About This Certificate</p>
+
+    <div class="info-row">
+      <span class="info-icon">🏢</span>
+      <p class="info-text">
+        This certificate was officially issued by
+        <strong>StatHub Datametrics Limited</strong>, a professional data analytics
+        and training organisation committed to empowering individuals with
+        high-impact data skills.
+      </p>
+    </div>
+
+    <div class="info-row">
+      <span class="info-icon">🔒</span>
+      <p class="info-text">
+        Each certificate carries a unique certificate number and QR code to
+        ensure authenticity. Scanning the QR code on the original document
+        redirects here for instant, tamper-proof verification.
+      </p>
+    </div>
+
+    <div class="info-row">
+      <span class="info-icon">🌟</span>
+      <p class="info-text">
+        StatHub Datametrics certificates recognise genuine achievement in our
+        programmes — including completion of training, workshops, and
+        project-based learning tracks.
+      </p>
+    </div>
+
+    <hr class="divider"/>
+
+    <p class="card-title">📞 &nbsp;Contact &amp; Enquiries</p>
+
+    <div class="info-row">
+      <span class="info-icon">💬</span>
+      <p class="info-text">
+        Have questions about this certificate or want to verify its authenticity
+        directly with our team? Reach us instantly on WhatsApp — we respond
+        promptly.
+      </p>
+    </div>
+
+    <div class="wa-wrap">
+      <a class="wa-btn"
+         href="https://wa.me/2347037095663"
+         target="_blank"
+         rel="noopener noreferrer">
+        💬 &nbsp; Contact Us on WhatsApp
+      </a>
+    </div>
+
+  </div>
+
+  <!-- ── Footer ───────────────────────────────────────────────────── -->
+  <div class="footer">
+    &copy; 2026 <strong>StatHub Datametrics Limited</strong>
+    &nbsp;&middot;&nbsp; All rights reserved.<br>
+    Certificate verification powered by StatHub Certificate Studio.
+  </div>
+
+</div>
+
+<!-- Pull cert number from ?cert=STH-ME-2026-0001 -->
+<script>
+  (function () {
+    const params = new URLSearchParams(window.location.search);
+    const cert   = params.get('cert');
+    if (cert) {
+      document.getElementById('cert-number').textContent = cert;
+      document.getElementById('cert-line').style.display  = 'block';
+    }
+  })();
+</script>
+
+</body>
+</html>
