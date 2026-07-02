@@ -1,6 +1,6 @@
 import streamlit as st
-import streamlit.components.v1 as components
 
+# ── Page config ────────────────────────────────────────────────────────────
 st.set_page_config(
     page_title="Certificate Verification | StatHub Datametrics",
     page_icon="🎓",
@@ -8,204 +8,258 @@ st.set_page_config(
     initial_sidebar_state="collapsed",
 )
 
-# Pull cert number from URL — works even with components.html
-cert_number = st.query_params.get("cert", "")
+# ── Custom CSS ─────────────────────────────────────────────────────────────
+st.markdown(
+    """
+    <style>
+    /* Import Google Font */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
-cert_line = (
-    f'<p class="hero-cert">Certificate No: <strong>{cert_number}</strong></p>'
-    if cert_number else ""
+    html, body, [class*="css"] {
+        font-family: 'Inter', sans-serif;
+    }
+
+    /* Hide Streamlit chrome */
+    #MainMenu, footer, header { visibility: hidden; }
+    .block-container {
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+        max-width: 680px;
+    }
+
+    /* ── Hero card ── */
+    .hero-card {
+        background: linear-gradient(135deg, #0D2B8E 0%, #123DCE 60%, #2AB7B0 100%);
+        border-radius: 20px;
+        padding: 48px 40px 40px 40px;
+        text-align: center;
+        color: white;
+        margin-bottom: 24px;
+        box-shadow: 0 20px 60px rgba(18, 61, 206, 0.25);
+    }
+
+    .badge-icon {
+        font-size: 64px;
+        margin-bottom: 12px;
+        display: block;
+    }
+
+    .hero-title {
+        font-size: 28px;
+        font-weight: 800;
+        margin: 0 0 8px 0;
+        letter-spacing: -0.5px;
+    }
+
+    .hero-sub {
+        font-size: 15px;
+        color: rgba(255,255,255,0.80);
+        margin: 0 0 28px 0;
+        line-height: 1.5;
+    }
+
+    /* ── Valid badge ── */
+    .valid-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255,255,255,0.18);
+        border: 1.5px solid rgba(255,255,255,0.35);
+        border-radius: 50px;
+        padding: 8px 22px;
+        font-size: 14px;
+        font-weight: 700;
+        color: #ffffff;
+        backdrop-filter: blur(6px);
+    }
+
+    /* ── Info card ── */
+    .info-card {
+        background: #ffffff;
+        border: 1.5px solid #E5E9F0;
+        border-radius: 16px;
+        padding: 28px 32px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 24px rgba(0,0,0,0.05);
+    }
+
+    .info-card h3 {
+        color: #0D2B8E;
+        font-size: 16px;
+        font-weight: 700;
+        margin: 0 0 16px 0;
+    }
+
+    .info-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        margin-bottom: 14px;
+    }
+
+    .info-icon {
+        font-size: 18px;
+        flex-shrink: 0;
+        margin-top: 1px;
+    }
+
+    .info-text {
+        font-size: 14px;
+        color: #374151;
+        line-height: 1.55;
+    }
+
+    .info-text strong {
+        color: #111827;
+    }
+
+    /* ── Divider ── */
+    .divider {
+        border: none;
+        border-top: 1.5px solid #F0F2F5;
+        margin: 20px 0;
+    }
+
+    /* ── WhatsApp button ── */
+    .wa-btn-wrap {
+        text-align: center;
+        margin-top: 8px;
+    }
+
+    .wa-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        background: #25D366;
+        color: #ffffff !important;
+        font-size: 15px;
+        font-weight: 700;
+        padding: 14px 36px;
+        border-radius: 50px;
+        text-decoration: none !important;
+        box-shadow: 0 8px 24px rgba(37, 211, 102, 0.35);
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .wa-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 32px rgba(37, 211, 102, 0.45);
+    }
+
+    .wa-icon {
+        font-size: 20px;
+    }
+
+    /* ── Footer ── */
+    .page-footer {
+        text-align: center;
+        font-size: 12px;
+        color: #9CA3AF;
+        margin-top: 28px;
+        line-height: 1.6;
+    }
+
+    .page-footer a {
+        color: #123DCE;
+        text-decoration: none;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
 )
 
-html_content = f"""
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
-<style>
-  *, *::before, *::after {{ box-sizing: border-box; margin: 0; padding: 0; }}
+# ── Cert number from query param ──────────────────────────────────────────
+query_params = st.query_params
+cert_number = query_params.get("cert", None)
 
-  body {{
-    font-family: 'Inter', sans-serif;
-    background: #F5F7FA;
-    color: #1A1A2E;
-    padding: 32px 16px 48px;
-    min-height: 100vh;
-  }}
+# ── Hero card ─────────────────────────────────────────────────────────────
+cert_display = f"<br><span style='font-size:13px;opacity:0.85;font-weight:500;letter-spacing:1px;'>{cert_number}</span>" if cert_number else ""
 
-  .page {{
-    max-width: 640px;
-    margin: 0 auto;
-  }}
-
-  /* ── Hero ── */
-  .hero {{
-    background: linear-gradient(135deg, #0D2B8E 0%, #123DCE 58%, #2AB7B0 100%);
-    border-radius: 20px;
-    padding: 48px 36px 44px;
-    text-align: center;
-    color: #fff;
-    box-shadow: 0 20px 60px rgba(18,61,206,0.28);
-    margin-bottom: 20px;
-  }}
-  .hero-icon  {{ font-size: 58px; display: block; margin-bottom: 14px; }}
-  .hero-title {{ font-size: 26px; font-weight: 800; margin-bottom: 10px; letter-spacing: -0.4px; }}
-  .hero-sub   {{ font-size: 15px; color: rgba(255,255,255,0.82); line-height: 1.6; margin-bottom: 24px; }}
-  .hero-cert  {{ font-size: 13px; color: rgba(255,255,255,0.75); margin-bottom: 20px; letter-spacing: 0.5px; }}
-  .hero-cert strong {{ color: #fff; font-weight: 700; }}
-  .pill {{
-    display: inline-block;
-    background: rgba(255,255,255,0.16);
-    border: 1.5px solid rgba(255,255,255,0.36);
-    border-radius: 50px;
-    padding: 10px 28px;
-    font-size: 14px;
-    font-weight: 700;
-    color: #fff;
-  }}
-
-  /* ── Info card ── */
-  .card {{
-    background: #fff;
-    border: 1.5px solid #E5E9F0;
-    border-radius: 16px;
-    padding: 32px 32px 28px;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.05);
-    margin-bottom: 20px;
-  }}
-  .card-title {{
-    font-size: 16px;
-    font-weight: 700;
-    color: #0D2B8E;
-    margin-bottom: 20px;
-  }}
-  .info-row {{
-    display: flex;
-    gap: 14px;
-    align-items: flex-start;
-    margin-bottom: 18px;
-  }}
-  .info-icon {{ font-size: 19px; flex-shrink: 0; margin-top: 2px; }}
-  .info-text {{ font-size: 14px; color: #374151; line-height: 1.65; }}
-  .info-text b {{ color: #111827; }}
-
-  .divider {{ border: none; border-top: 1.5px solid #F0F2F5; margin: 22px 0; }}
-
-  /* ── WhatsApp button ── */
-  .wa-wrap {{ text-align: center; margin-top: 10px; }}
-  .wa-btn {{
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    background: #25D366;
-    color: #fff;
-    font-family: 'Inter', sans-serif;
-    font-size: 15px;
-    font-weight: 700;
-    padding: 14px 38px;
-    border-radius: 50px;
-    text-decoration: none;
-    box-shadow: 0 8px 28px rgba(37,211,102,0.38);
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
-  }}
-  .wa-btn:hover {{
-    transform: translateY(-2px);
-    box-shadow: 0 12px 36px rgba(37,211,102,0.48);
-    color: #fff;
-  }}
-
-  /* ── Footer ── */
-  .footer {{
-    text-align: center;
-    font-size: 12px;
-    color: #9CA3AF;
-    line-height: 1.7;
-    margin-top: 28px;
-  }}
-</style>
-</head>
-<body>
-<div class="page">
-
-  <!-- Hero -->
-  <div class="hero">
-    <span class="hero-icon">🎓</span>
-    <p class="hero-title">Certificate of Authenticity</p>
-    <p class="hero-sub">
-      This document confirms the validity of a certificate<br>
-      issued by <strong>StatHub Datametrics Limited</strong>.
-    </p>
-    {cert_line}
-    <div class="pill">✅ &nbsp; Verified &amp; Authentic Certificate</div>
-  </div>
-
-  <!-- About -->
-  <div class="card">
-    <p class="card-title">📋 About This Certificate</p>
-
-    <div class="info-row">
-      <span class="info-icon">🏢</span>
-      <p class="info-text">
-        This certificate was officially issued by
-        <b>StatHub Datametrics Limited</b>, a professional data analytics
-        and training organisation committed to empowering individuals
-        with high-impact data skills.
-      </p>
+st.markdown(
+    f"""
+    <div class="hero-card">
+        <span class="badge-icon">🎓</span>
+        <p class="hero-title">Certificate of Authenticity</p>
+        <p class="hero-sub">
+            This document confirms the validity of a certificate<br>
+            issued by <strong>StatHub Datametrics Limited</strong>.{cert_display}
+        </p>
+        <div class="valid-badge">
+            ✅ &nbsp; Verified &amp; Authentic Certificate
+        </div>
     </div>
+    """,
+    unsafe_allow_html=True,
+)
 
-    <div class="info-row">
-      <span class="info-icon">🔒</span>
-      <p class="info-text">
-        Each certificate carries a unique certificate number and QR code
-        to ensure authenticity. Scanning the QR code on the original
-        document redirects here for instant, tamper-proof verification.
-      </p>
+# ── Info card ─────────────────────────────────────────────────────────────
+st.markdown(
+    """
+    <div class="info-card">
+        <h3>📋 About This Certificate</h3>
+
+        <div class="info-row">
+            <span class="info-icon">🏢</span>
+            <p class="info-text">
+                This certificate was officially issued by
+                <strong>StatHub Datametrics Limited</strong>, a professional
+                data analytics and training organisation committed to empowering
+                individuals with high-impact data skills.
+            </p>
+        </div>
+
+        <div class="info-row">
+            <span class="info-icon">🔒</span>
+            <p class="info-text">
+                Each certificate carries a unique certificate number and QR code
+                to ensure authenticity. Scanning the QR code on the original
+                document should redirect here for instant verification.
+            </p>
+        </div>
+
+        <div class="info-row">
+            <span class="info-icon">🌟</span>
+            <p class="info-text">
+                StatHub Datametrics certificates recognise genuine achievement
+                in our programmes, including completion of training, workshops,
+                and project-based learning tracks.
+            </p>
+        </div>
+
+        <hr class="divider">
+
+        <h3>📞 Contact &amp; Enquiries</h3>
+
+        <div class="info-row">
+            <span class="info-icon">💬</span>
+            <p class="info-text">
+                Have questions about this certificate or want to verify its
+                authenticity directly with our team? Reach us instantly on
+                WhatsApp — we respond promptly.
+            </p>
+        </div>
+
+        <div class="wa-btn-wrap">
+            <a class="wa-btn"
+               href="https://wa.me/2347037095663"
+               target="_blank"
+               rel="noopener noreferrer">
+                <span class="wa-icon">💬</span>
+                Contact Us on WhatsApp
+            </a>
+        </div>
     </div>
+    """,
+    unsafe_allow_html=True,
+)
 
-    <div class="info-row">
-      <span class="info-icon">🌟</span>
-      <p class="info-text">
-        StatHub Datametrics certificates recognise genuine achievement
-        in our programmes — including completion of training, workshops,
-        and project-based learning tracks.
-      </p>
+# ── Footer ────────────────────────────────────────────────────────────────
+st.markdown(
+    """
+    <div class="page-footer">
+        © 2026 <strong>StatHub Datametrics Limited</strong> · All rights reserved.<br>
+        Certificate verification system powered by StatHub Certificate Studio.
     </div>
-
-    <hr class="divider">
-
-    <p class="card-title">📞 Contact &amp; Enquiries</p>
-
-    <div class="info-row">
-      <span class="info-icon">💬</span>
-      <p class="info-text">
-        Have questions about this certificate or want to verify its
-        authenticity directly with our team? Reach us instantly on
-        WhatsApp — we respond promptly.
-      </p>
-    </div>
-
-    <div class="wa-wrap">
-      <a class="wa-btn"
-         href="https://wa.me/2347037095663"
-         target="_blank"
-         rel="noopener noreferrer">
-        💬 &nbsp; Contact Us on WhatsApp
-      </a>
-    </div>
-  </div>
-
-  <!-- Footer -->
-  <div class="footer">
-    &copy; 2026 <strong>StatHub Datametrics Limited</strong> &nbsp;&middot;&nbsp; All rights reserved.<br>
-    Certificate verification powered by StatHub Certificate Studio.
-  </div>
-
-</div>
-</body>
-</html>
-"""
-
-# Render via components.html — bypasses Streamlit's HTML sanitiser entirely
-components.html(html_content, height=920, scrolling=False)
+    """,
+    unsafe_allow_html=True,
+)
