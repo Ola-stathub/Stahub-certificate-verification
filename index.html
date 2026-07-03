@@ -286,3 +286,16 @@
 
 </body>
 </html>
+
+<!-- Pull cert number from ?cert=STH-ME-2026-0001 -->
+<script>
+  (function () {
+    const params = new URLSearchParams(window.location.search);
+    const cert   = params.get('cert');
+    if (cert) {
+      document.getElementById('cert-number').textContent = cert;
+      document.getElementById('cert-line').style.display  = 'block';
+    }
+  })();
+</script>
+
